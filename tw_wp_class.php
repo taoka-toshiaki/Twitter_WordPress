@@ -32,18 +32,19 @@ class tw_wp_class
             }
             public function wp_post()
             {
-                $wp_error = $timeH = $wp_post_txt = null;
+                $wp_error = $timeYMD = $timeH = $wp_post_txt = null;
 
                 foreach ($this->txt as $key => $val) {
                     if (preg_match("/" . BLOGPOSTKEYWORD . "/", $val->text)) {
                         $wp_post_txt[] = $val->text;
+                        $timeYMD[] = wp_date('Y-m-d', (strtotime($val->created_at)));
                         $timeH[] = wp_date('H', (strtotime($val->created_at)));
                     }
                 }
 
                 if (count($timeH)) {
                     foreach ($timeH as $key => $val) {
-                        if ($wp_post_txt[$key] !== "" && wp_date("H") === $timeH[$key]) {
+                       if ($wp_post_txt[$key] !== "" && wp_date("Y-m-d") === $timeYMD[$key] && wp_date("H") === $timeH[$key]) {
                             $my_post = array(
                                 'post_title' => 'Twitterからの投稿 - ' . wp_date('Y-m-d H:i:s'),
                                 'post_content' => $wp_post_txt[$key],
